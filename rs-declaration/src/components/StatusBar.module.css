@@ -1,0 +1,48 @@
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: var(--radius2);
+  font-size: 12px;
+  font-family: var(--mono);
+  animation: fadeIn 0.2s ease;
+}
+
+.loading {
+  background: rgba(78,140,255,0.08);
+  border: 1px solid rgba(78,140,255,0.25);
+  color: #7aaaff;
+}
+
+.success {
+  background: rgba(0,212,170,0.08);
+  border: 1px solid rgba(0,212,170,0.25);
+  color: var(--teal);
+}
+
+.error {
+  background: rgba(255,87,87,0.08);
+  border: 1px solid rgba(255,87,87,0.25);
+  color: var(--red);
+}
+
+.spinner {
+  width: 13px;
+  height: 13px;
+  border: 2px solid rgba(122,170,255,0.3);
+  border-top-color: #7aaaff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+.icon {
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.msg {
+  flex: 1;
+  line-height: 1.4;
+}

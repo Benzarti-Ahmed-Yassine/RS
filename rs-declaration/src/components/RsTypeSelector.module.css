@@ -1,0 +1,172 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.label {
+  font-size: 10px;
+  font-family: var(--mono);
+  color: var(--text3);
+  letter-spacing: 1px;
+}
+
+.select,
+.input {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 9px 12px;
+  border-radius: var(--radius2);
+  font-family: var(--mono);
+  font-size: 12px;
+  outline: none;
+  transition: border-color 0.2s;
+  appearance: none;
+  width: 100%;
+}
+
+.select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23505870' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+  cursor: pointer;
+}
+
+.select:focus,
+.input:focus {
+  border-color: var(--amber);
+}
+
+.select option {
+  background: var(--surface2);
+}
+
+.cardsWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cardsLabel {
+  font-size: 10px;
+  font-family: var(--mono);
+  color: var(--text3);
+  letter-spacing: 1px;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 260px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius2);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.18s;
+  width: 100%;
+}
+
+.card:hover {
+  border-color: rgba(245,166,35,0.4);
+  background: var(--amber-soft);
+}
+
+.selected {
+  border-color: var(--amber) !important;
+  background: var(--amber-soft) !important;
+  box-shadow: 0 0 0 1px var(--amber);
+}
+
+.cardId {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--amber);
+  font-weight: 500;
+  white-space: nowrap;
+  background: var(--amber-soft);
+  padding: 2px 7px;
+  border-radius: 4px;
+  border: 1px solid rgba(245,166,35,0.2);
+}
+
+.cardDesc {
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.4;
+}
+
+.cardTaux {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--teal);
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.tauxRow {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.applyBtn {
+  padding: 9px 14px;
+  border-radius: var(--radius2);
+  border: 1px solid var(--border2);
+  background: var(--surface2);
+  color: var(--text2);
+  font-family: var(--sans);
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  height: 36px;
+}
+
+.applyBtn:hover {
+  border-color: var(--teal);
+  color: var(--teal);
+  background: var(--teal-soft);
+}
+
+.selectedBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(0,212,170,0.06);
+  border: 1px solid rgba(0,212,170,0.2);
+  border-radius: var(--radius2);
+  font-size: 12px;
+  color: var(--text2);
+  font-family: var(--mono);
+}
+
+.checkmark {
+  color: var(--teal);
+  font-weight: bold;
+}
+
+.selectedBadge strong {
+  color: var(--teal);
+}

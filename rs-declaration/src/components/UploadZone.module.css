@@ -1,0 +1,129 @@
+.zone {
+  border: 2px dashed var(--border2);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.2s;
+  overflow: hidden;
+  min-height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.zone:hover, .dragging {
+  border-color: var(--amber);
+  background: var(--amber-soft);
+}
+
+.hasFile {
+  cursor: default;
+  border-style: solid;
+  border-color: var(--border2);
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 32px;
+  text-align: center;
+}
+
+.iconRing {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 2px dashed var(--border2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text3);
+  transition: all 0.2s;
+}
+
+.zone:hover .iconRing {
+  border-color: var(--amber);
+  color: var(--amber);
+  background: var(--amber-soft);
+}
+
+.mainText {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text2);
+}
+
+.subText {
+  font-size: 11px;
+  color: var(--text3);
+  font-family: var(--mono);
+}
+
+.filePreview {
+  position: relative;
+  width: 100%;
+  padding: 12px;
+}
+
+.previewImg {
+  width: 100%;
+  max-height: 260px;
+  object-fit: contain;
+  border-radius: 8px;
+  display: block;
+}
+
+.pdfIcon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 24px;
+  color: var(--text2);
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.clearBtn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--border2);
+  background: var(--surface2);
+  color: var(--text2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.clearBtn:hover { color: var(--red); border-color: var(--red); background: var(--red-soft); }
+
+.fileInfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+  padding: 6px 4px 2px;
+}
+
+.fileName {
+  font-size: 12px;
+  font-family: var(--mono);
+  color: var(--text2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 200px;
+}
+
+.fileSize {
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--text3);
+}

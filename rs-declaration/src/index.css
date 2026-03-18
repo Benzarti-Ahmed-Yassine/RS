@@ -1,0 +1,91 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #0c0e14;
+  --bg2:       #111520;
+  --surface:   #161b28;
+  --surface2:  #1c2235;
+  --border:    #252d42;
+  --border2:   #2e3850;
+
+  --amber:     #f5a623;
+  --amber-dim: #c47d0e;
+  --amber-glow:rgba(245,166,35,0.15);
+  --amber-soft:rgba(245,166,35,0.08);
+
+  --teal:      #00d4aa;
+  --teal-soft: rgba(0,212,170,0.1);
+
+  --red:       #ff5757;
+  --red-soft:  rgba(255,87,87,0.1);
+
+  --blue:      #4e8cff;
+  --blue-soft: rgba(78,140,255,0.1);
+
+  --text:      #e2e8f8;
+  --text2:     #8b96b0;
+  --text3:     #505870;
+
+  --mono: 'DM Mono', monospace;
+  --sans: 'Outfit', sans-serif;
+
+  --radius:  12px;
+  --radius2: 8px;
+  --shadow:  0 4px 24px rgba(0,0,0,0.4);
+  --shadow2: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text3); }
+
+/* Selection */
+::selection { background: var(--amber-glow); color: var(--amber); }
+
+/* Focus ring */
+:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+
+/* Animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+.fade-up  { animation: fadeUp  0.4s ease both; }
+.fade-in  { animation: fadeIn  0.3s ease both; }
+
+/* Utility */
+.text-amber { color: var(--amber); }
+.text-teal  { color: var(--teal); }
+.text-muted { color: var(--text2); }
+.text-dim   { color: var(--text3); }
+.mono       { font-family: var(--mono); }
