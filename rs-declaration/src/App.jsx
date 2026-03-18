@@ -1,8 +1,6 @@
-import { useEffect } from 'react'
 import { useInvoiceAnalyzer } from './hooks/useInvoiceAnalyzer'
 
 import Header        from './components/Header'
-import ApiKeyModal   from './components/ApiKeyModal'
 import Panel         from './components/Panel'
 import UploadZone    from './components/UploadZone'
 import DeclarantForm from './components/DeclarantForm'
@@ -17,23 +15,12 @@ import styles from './App.module.css'
 export default function App() {
   const state = useInvoiceAnalyzer()
 
-  // Persist API key in localStorage
-  useEffect(() => {
-    const saved = localStorage.getItem('rs_api_key')
-    if (saved) state.setApiKey(saved)
-  }, [])
-
-  const handleSaveKey = (key) => {
-    state.setApiKey(key)
-    localStorage.setItem('rs_api_key', key)
-  }
-
   return (
     <div className={styles.app}>
       {/* Background grid */}
       <div className={styles.gridBg} aria-hidden />
 
-      <Header onSettingsClick={() => state.setShowKeyModal(true)} />
+      <Header />
 
       <main className={styles.main}>
         <div className={styles.layout}>
@@ -102,14 +89,7 @@ export default function App() {
                   )}
                 </button>
 
-                {!state.apiKey && (
-                  <button
-                    className={styles.keyPrompt}
-                    onClick={() => state.setShowKeyModal(true)}
-                  >
-                    ⚙ Configurer la clé API Anthropic
-                  </button>
-                )}
+
               </div>
             </Panel>
 
@@ -143,14 +123,6 @@ export default function App() {
         </div>
       </main>
 
-      {/* API Key modal */}
-      {state.showKeyModal && (
-        <ApiKeyModal
-          apiKey={state.apiKey}
-          onSave={handleSaveKey}
-          onClose={() => state.setShowKeyModal(false)}
-        />
-      )}
     </div>
   )
 }

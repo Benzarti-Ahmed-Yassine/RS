@@ -17,9 +17,8 @@ const defaultReference = {
 }
 
 export function useInvoiceAnalyzer() {
-  // API key (runtime input)
-  const [apiKey, setApiKey]       = useState(import.meta.env.VITE_ANTHROPIC_API_KEY || '')
-  const [showKeyModal, setShowKeyModal] = useState(false)
+  // API key from .env
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY || ''
 
   // File
   const [file, setFile]           = useState(null)
@@ -75,12 +74,12 @@ export function useInvoiceAnalyzer() {
     if (!rsId)   return setStatus({ type: 'error', msg: 'Veuillez sélectionner un type d\'opération RS.' })
 
     const key = apiKey?.trim()
-    if (!key) { setShowKeyModal(true); return }
+    if (!key) { setStatus({ type: 'error', msg: 'Clé API manquante dans le fichier .env' }); return }
 
-    setStatus({ type: 'loading', msg: 'Analyse de la facture par Claude Vision…' })
+    setStatus({ type: 'loading', msg: 'Analyse de la facture...' })
 
     try {
-      const data = await extractInvoiceData(base64, key)
+      const data = await extractInvoiceData(base64, mimeType)
       setInvoiceData(data)
 
       // Auto-fill forms
@@ -112,12 +111,12 @@ export function useInvoiceAnalyzer() {
       setStatus({ type: 'success', msg: `Facture ${data.facture_num || ''} analysée — ${groups.length} groupe(s) TVA détecté(s)` })
     } catch (err) {
       const messages = {
-        API_KEY_MISSING: 'Clé API manquante. Cliquez sur l\'icône ⚙ pour la saisir.',
-        API_KEY_INVALID: 'Clé API invalide (401). Vérifiez votre clé sur console.anthropic.com.',
+        API_KEY_MISSING: 'Clé API manquante dans le fichier .env.',
+        API_KEY_INVALID: 'Clé API invalide. Vérifiez votre clé sur aistudio.google.com.',
         RATE_LIMIT: 'Limite de taux atteinte. Réessayez dans quelques secondes.',
       }
       setStatus({ type: 'error', msg: messages[err.message] || err.message })
-      if (err.message === 'API_KEY_MISSING') setShowKeyModal(true)
+
     }
   }, [base64, mimeType, apiKey, rsId, globalTauxRS])
 
@@ -161,7 +160,7 @@ export function useInvoiceAnalyzer() {
 
   return {
     // API key
-    apiKey, setApiKey, showKeyModal, setShowKeyModal,
+    apiKey,
     // File
     file, preview, handleFile,
     // Status

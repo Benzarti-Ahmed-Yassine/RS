@@ -1,26 +1,16 @@
 /**
- * anthropicClient.js
+ * anthropicClient.js -> Now migrated to Google Gemini API (Free Tier)
+ * 
+ * We kept the same filename to avoid breaking your imports,
+ * but this now uses Gemini 1.5 Flash which has a generous free tier!
  *
- * Sends an invoice image to Claude Vision and returns structured JSON data.
- *
- * HOW IT WORKS OUTSIDE CLAUDE.AI:
- * ─────────────────────────────────
- * In Claude.ai artifacts, the API proxy is handled automatically.
- * In your own app (GitHub / local), you provide your own API key via .env:
- *
- *   VITE_ANTHROPIC_API_KEY=sk-ant-xxxxx
- *
- * The request goes directly from the browser to api.anthropic.com.
- * The header `anthropic-dangerous-direct-browser-access: true` is required
- * by Anthropic to allow direct browser calls (use only in dev/trusted envs).
- *
- * For a SECURE production deployment, replace this with a call to your own
- * backend endpoint (Express, FastAPI, etc.) that holds the key server-side.
+ * Requirements:
+ * 1. Get a free API key at: https://aistudio.google.com/
+ * 2. Put it in your .env as VITE_GEMINI_API_KEY=AIzaSy...
  */
 
-const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages'
-const MODEL = 'claude-opus-4-5-20251101'
-const API_KEY = ''
+const MODEL_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='
+
 const EXTRACTION_PROMPT = `Tu es un expert comptable tunisien spécialisé dans l'analyse de factures.
 Analyse cette facture et extrais TOUTES les données en JSON uniquement — aucun texte avant ou après, aucun bloc markdown.
 
@@ -63,65 +53,60 @@ Règles importantes:
 - si une information est absente de la facture, mets null ou une chaîne vide
 - ne jamais inventer des données qui ne sont pas dans la facture`
 
-export async function extractInvoiceData(base64Image, mimeType, apiKey) {
-  const key = apiKey || import.meta.env.VITE_ANTHROPIC_API_KEY
-
-  if (!key || key === 'sk-ant-xxxxxxxxxxxxxxxxxxxxxxxx') {
+export async function extractInvoiceData(base64Image, mimeType) {
+  // Use the environment variable directly (UI config removed)
+  const key = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_ANTHROPIC_API_KEY
+  
+  if (!key || key.includes('xxxxxxxxxxx')) {
     throw new Error('API_KEY_MISSING')
   }
 
-  const response = await fetch(ANTHROPIC_API_URL, {
+  const response = await fetch(`${MODEL_ENDPOINT}${key}`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': key,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true',
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      model: MODEL,
-      max_tokens: 2048,
-      messages: [
+      contents: [
         {
-          role: 'user',
-          content: [
+          parts: [
+            { text: EXTRACTION_PROMPT },
             {
-              type: 'image',
-              source: {
-                type: 'base64',
-                media_type: mimeType,
-                data: base64Image,
-              },
-            },
-            {
-              type: 'text',
-              text: EXTRACTION_PROMPT,
-            },
-          ],
-        },
+              inline_data: {
+                mime_type: mimeType,
+                data: base64Image
+              }
+            }
+          ]
+        }
       ],
-    }),
-  })
+      generationConfig: {
+        responseMimeType: 'application/json'
+      }
+    })
+  });
 
   if (!response.ok) {
-    const err = await response.json().catch(() => ({}))
-    if (response.status === 401) throw new Error('API_KEY_INVALID')
-    if (response.status === 429) throw new Error('RATE_LIMIT')
-    throw new Error(err?.error?.message || `HTTP ${response.status}`)
+    const errorData = await response.json().catch(() => ({}));
+    console.error("Gemini API Error:", errorData);
+    if (response.status === 400 && errorData?.error?.message?.includes('API key not valid')) {
+      throw new Error('API_KEY_INVALID');
+    }
+    throw new Error(errorData?.error?.message || `HTTP ${response.status}`);
   }
 
-  const data = await response.json()
-  const text = data.content
-    .filter((b) => b.type === 'text')
-    .map((b) => b.text)
-    .join('')
+  const data = await response.json();
+  
+  if (!data.candidates || data.candidates.length === 0) {
+    throw new Error('PARSE_ERROR: No response from Gemini');
+  }
 
-  // Strip any accidental markdown fences
-  const clean = text.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim()
+  const text = data.candidates[0].content.parts[0].text;
+  const clean = text.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
 
   try {
-    return JSON.parse(clean)
+    return JSON.parse(clean);
   } catch {
-    throw new Error('PARSE_ERROR: ' + clean.slice(0, 200))
+    throw new Error('PARSE_ERROR: ' + clean.slice(0, 200));
   }
 }
