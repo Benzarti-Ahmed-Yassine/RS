@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { extractInvoiceData } from '../utils/anthropicClient'
 import { groupByTVA } from '../utils/tvaGrouper'
 import { generateXML } from '../utils/xmlGenerator'
@@ -19,6 +19,16 @@ const defaultReference = {
 export function useInvoiceAnalyzer() {
   // API key from .env
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY || ''
+
+  // History
+  const [history, setHistory] = useState([])
+
+  useEffect(() => {
+    const saved = localStorage.getItem('rs_declaration_history')
+    if (saved) {
+      try { setHistory(JSON.parse(saved)) } catch (e) { }
+    }
+  }, [])
 
   // File
   const [file, setFile]           = useState(null)
@@ -145,6 +155,25 @@ export function useInvoiceAnalyzer() {
       cnpc,
     })
     setXmlOutput(xml)
+
+    // Save to history
+    const newRecord = {
+      id: Date.now().toString(),
+      dateGened: new Date().toISOString(),
+      factureNum: refCertif || 'N/A',
+      fournisseur: beneficiaire.nom || 'Inconnu',
+      xml: xml,
+      invoiceData,
+      tvaGroups,
+      rsId,
+      declarant,
+      beneficiaire,
+    }
+    setHistory(prev => {
+      const updated = [newRecord, ...prev].slice(0, 50)
+      localStorage.setItem('rs_declaration_history', JSON.stringify(updated))
+      return updated
+    })
   }, [declarant, reference, beneficiaire, invoiceData, refCertif, rsId, tvaGroups, cnpc])
 
   // ── Download XML ─────────────────────────────────────────────────
@@ -157,6 +186,31 @@ export function useInvoiceAnalyzer() {
     a.click()
     URL.revokeObjectURL(a.href)
   }, [xmlOutput, refCertif])
+
+  // ── Reset ────────────────────────────────────────────────────────
+  const resetApp = useCallback(() => {
+    setFile(null)
+    setPreview(null)
+    setBase64('')
+    setMimeType('')
+    setStatus(null)
+    setInvoiceData(null)
+    setDeclarant(defaultDeclarant)
+    setBeneficiaire(defaultBeneficiaire)
+    setReference(defaultReference)
+    setRefCertif('')
+    setCnpc('0')
+    setRsCategorie('')
+    setRsId('')
+    setTvaGroups([])
+    setGlobalTauxRS(1.5)
+    setXmlOutput('')
+  }, [])
+
+  const clearHistory = useCallback(() => {
+    setHistory([])
+    localStorage.removeItem('rs_declaration_history')
+  }, [])
 
   return {
     // API key
@@ -178,8 +232,10 @@ export function useInvoiceAnalyzer() {
     rsCategorie, setRsCategorie,
     rsId, setRsId,
     // Actions
-    analyze, generateXMLOutput, downloadXML,
+    analyze, generateXMLOutput, downloadXML, resetApp,
     // Output
     xmlOutput,
+    // History
+    history, clearHistory
   }
 }
