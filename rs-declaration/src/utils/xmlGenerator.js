@@ -33,7 +33,7 @@ export function generateXML({ declarant, reference, beneficiaire, invoice, rsId,
     const mHT  = mil(g.ht)
     const mTVA = mil(g.tva_amt)
     const mTTC = mil(g.ttc)
-    const mRS  = mil(g.ht * g.taux_rs / 100)
+    const mRS  = mil(g.ttc * g.taux_rs / 100)
     const mNet = mTTC - mRS
     sumHT  += mHT
     sumTVA += mTVA

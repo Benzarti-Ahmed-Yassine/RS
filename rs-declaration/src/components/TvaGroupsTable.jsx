@@ -10,8 +10,8 @@ function fmt(n) {
 export default function TvaGroupsTable({ tvaGroups, onUpdateRS }) {
   if (!tvaGroups || tvaGroups.length === 0) return null
 
-  const totalRS = tvaGroups.reduce((s, g) => s + g.ht * g.taux_rs / 100, 0)
-  const totalNet = tvaGroups.reduce((s, g) => s + g.ttc - g.ht * g.taux_rs / 100, 0)
+  const totalRS = tvaGroups.reduce((s, g) => s + g.ttc * g.taux_rs / 100, 0)
+  const totalNet = tvaGroups.reduce((s, g) => s + g.ttc - g.ttc * g.taux_rs / 100, 0)
 
   return (
     <div className={styles.wrap}>
@@ -40,7 +40,7 @@ export default function TvaGroupsTable({ tvaGroups, onUpdateRS }) {
           </thead>
           <tbody>
             {tvaGroups.map((g, i) => {
-              const rs  = g.ht * g.taux_rs / 100
+              const rs  = g.ttc * g.taux_rs / 100
               const net = g.ttc - rs
               return (
                 <tr key={i}>

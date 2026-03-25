@@ -33,11 +33,11 @@ export function groupByTVA(lignes = [], defaultTauxRS = 1.5) {
 export function computeGroupTotals(groups) {
   return groups.reduce(
     (acc, g) => {
-      const rs = g.ht * g.taux_rs / 100
-      acc.sumHT  += g.ht
+      const rs = g.ttc * g.taux_rs / 100
+      acc.sumHT += g.ht
       acc.sumTVA += g.tva_amt
       acc.sumTTC += g.ttc
-      acc.sumRS  += rs
+      acc.sumRS += rs
       return acc
     },
     { sumHT: 0, sumTVA: 0, sumTTC: 0, sumRS: 0 }
