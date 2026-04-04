@@ -2,14 +2,14 @@
 
 **Décodeur de factures → XML Retenue à la Source (DGI Tunisie)**
 
-Analyse automatiquement une facture (image/PDF) via Claude AI et génère le fichier XML conforme pour la déclaration de Retenue à la Source tunisienne — avec support des **multi-taux TVA** (une `<Operation>` par groupe TVA).
+Analyse automatiquement une facture (image/PDF) grâce à **Google Gemini (IA)** et génère le fichier XML conforme pour la déclaration de Retenue à la Source tunisienne — avec support des **multi-taux TVA** (une `<Operation>` par groupe TVA).
 
 ---
 
 ## ✨ Fonctionnalités
 
 - 📸 **Upload facture** (PNG, JPG, PDF)
-- 🤖 **Extraction automatique** via Claude Vision API (numéro, date, fournisseur, client, lignes, totaux)
+- 🧠 **Extraction Intelligente** via Gemini Vision API (numéro, date, fournisseur, client, lignes, totaux)
 - 🔀 **Multi-taux TVA** : groupement automatique des lignes par taux → plusieurs `<Operation>` XML
 - 🗂️ **Tous les types RS** : RS1 → RS11 avec leurs désignations officielles DGI
 - ✏️ **Édition manuelle** de tous les champs avant génération
@@ -32,20 +32,20 @@ cd rs-declaration
 npm install
 ```
 
-### 3. Configurer la clé API
+### 3. Configurer la clé API Gemini
 
 ```bash
 cp .env.example .env
 ```
 
-Éditez `.env` et ajoutez votre clé Anthropic :
+Éditez `.env` et ajoutez votre clé API Google Gemini :
 
 ```
-VITE_ANTHROPIC_API_KEY=sk-ant-xxxxxxxxxxxxxxxxxxxxxxxx
+VITE_GEMINI_API_KEY=AIzaSyxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
-> **Obtenir une clé API** : [https://console.anthropic.com/](https://console.anthropic.com/)  
-> Le modèle utilisé est `claude-opus-4-5` (vision). Vérifiez que votre compte a accès à ce modèle.
+> **Obtenir une clé API gratuite** : [Google AI Studio](https://aistudio.google.com/app/apikey)  
+> Le modèle suggéré pour l'extraction de factures est `gemini-1.5-pro` ou `gemini-1.5-flash` pour leur rapidité et leur support vision étendu.
 
 ### 4. Lancer l'application
 
@@ -57,20 +57,22 @@ Ouvrez [http://localhost:5173](http://localhost:5173)
 
 ---
 
-## 🏗️ Build pour production
+## 🏗️ Architecture et Vues
 
-```bash
-npm run build
-```
+L'application est structurée en une *Single Page Application* (SPA) optimisée par **React et Vite** :
 
-> ⚠️ **Important en production** : Ne jamais exposer la clé API côté client dans un déploiement public.  
-> Pour un déploiement sécurisé, créez un backend Express/FastAPI qui fait le proxy vers l'API Anthropic.
+- 🏠 **Home** : Vue d'accueil.
+- 📊 **Dashboard** : Centre de traitement où l'IA vérifie et extrait les données (`geminiService.js`), puis affiche les résultats via `TvaGroupsTable`.
+- 🕰️ **History** : Audit et sauvegardes des déclarations.
+- ⚙️ **Moteur XML** : Le script métier (`tvaGrouper.js` puis `xmlGenerator.js`) qui s'assure de l'exactitude comptable et génère le fichier final pour la DGI.
+
+> ⚠️ **Important en production** : Ne jamais exposer la clé API côté client dans un déploiement public. Pour un déploiement sécurisé, implémentez un backend (par exemple un serveur Node.js/Express) qui agit en proxy vers l'API Gemini.
 
 ---
 
 ## 📁 Structure du projet
 
-```
+```text
 rs-declaration/
 ├── src/
 │   ├── components/
@@ -78,37 +80,35 @@ rs-declaration/
 │   │   ├── ApiKeyModal.jsx      # Modal saisie clé API
 │   │   ├── UploadZone.jsx       # Zone upload facture
 │   │   ├── DeclarantForm.jsx    # Formulaire déclarant + bénéficiaire
-│   │   ├── RsTypeSelector.jsx   # Sélecteur type opération RS
-│   │   ├── ExtractedTable.jsx   # Tableau lignes extraites
+│   │   ├── RsTypeSelector.jsx   # Sélecteur type RS
 │   │   ├── TvaGroupsTable.jsx   # Groupes TVA éditables
 │   │   └── XmlOutput.jsx        # Affichage + téléchargement XML
 │   ├── hooks/
-│   │   └── useInvoiceAnalyzer.js  # Hook principal : analyse + state
+│   │   └── useInvoiceAnalyzer.js  # Hook principal : appel Gemini + état
+│   ├── pages/                   # Vues principales de l'application
+│   │   ├── Home.jsx
+│   │   ├── Dashboard.jsx
+│   │   └── HistoryPage.jsx
 │   ├── utils/
-│   │   ├── anthropicClient.js   # Appel API Anthropic (Vision)
+│   │   ├── geminiService.js     # Appel API Google Generative AI (Vision)
 │   │   ├── xmlGenerator.js      # Génération XML RS
 │   │   └── tvaGrouper.js        # Groupement lignes par TVA
-│   ├── data/
-│   │   └── rsTypes.js           # Base de données types RS (RS1-RS11)
-│   ├── App.jsx
-│   ├── main.jsx
-│   └── index.css
+│   ├── App.jsx                  # Configuration globale et React Router
+│   ├── main.jsx                 # Point d'entrée de l'application
+│   └── index.css                # Styles globaux
 ├── .env.example
-├── .gitignore
-├── package.json
-├── vite.config.js
-└── README.md
+└── README.md                    # Ce fichier d'instructions
 ```
 
 ---
 
 ## 🔑 Comment fonctionne l'extraction
 
-1. La facture (image ou première page PDF) est convertie en **base64**
-2. Envoi à l'API **Claude Vision** (`claude-opus-4-5`) avec un prompt structuré
-3. Claude extrait : numéro facture, date, coordonnées fournisseur/client, chaque ligne (libellé, quantité, PU HT, PT HT, TVA%, Total TTC), et les totaux
-4. Les lignes sont **groupées par taux TVA** → une `<Operation>` XML par groupe
-5. Les montants XML sont en **millimes** (×1000) conformément au format DGI
+1. L'utilisateur importe sa facture (image PNG/JPG ou première page PDF) qui est convertie en **base64**.
+2. Les données sont envoyées à l'API **Google Gemini** avec un prompt structuré dictant le format final.
+3. L'intelligence artificielle extrait : les données du fournisseur, les dates, les totaux, chaque ligne de produit (quantité, PU HT, taux de TVA pertinent). Elle nettoie ou signale les anomalies détectées.
+4. Les lignes traitées transitent vers le module de **groupement TVA** (formatage en une balise `<Operation>` par groupe).
+5. Les montants finaux sont formatés en **millimes** (×1000) et le XML est instancié selon le schéma de la DGI.
 
 ---
 
@@ -123,7 +123,6 @@ rs-declaration/
     <Certificat>
       <Beneficiaire>...</Beneficiaire>
       <ListeOperations>
-        <!-- Une Operation par groupe TVA -->
         <Operation IdTypeOperation="RS7_000001">
           <TauxTVA>0</TauxTVA>
           ...
