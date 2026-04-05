@@ -14,6 +14,8 @@ Analyse automatiquement une facture (image/PDF) grâce à **Google Gemini (IA)**
 - 🗂️ **Tous les types RS** : RS1 → RS11 avec leurs désignations officielles DGI
 - ✏️ **Édition manuelle** de tous les champs avant génération
 - 📥 **Téléchargement XML** prêt à importer dans le portail DGI
+- 🛠️ **Éditeur XML intégré** : Modifiez visuellement (via formulaire) vos fichiers existants post-génération.
+- ✨ **Interface Premium animée** : Design UI ultra clair, layout Top Navigation et animations avec `framer-motion`.
 
 ---
 
@@ -61,9 +63,10 @@ Ouvrez [http://localhost:5173](http://localhost:5173)
 
 L'application est structurée en une *Single Page Application* (SPA) optimisée par **React et Vite** :
 
-- 🏠 **Home** : Vue d'accueil.
+- 🏠 **Home** : Vue d'accueil avec animations interactives (Framer Motion).
 - 📊 **Dashboard** : Centre de traitement où l'IA vérifie et extrait les données (`geminiService.js`), puis affiche les résultats via `TvaGroupsTable`.
 - 🕰️ **History** : Audit et sauvegardes des déclarations.
+- 📝 **Éditeur XML** : Vue dédiée pour charger, lire et corriger directement via un arbre dynamique UI les anciens fichiers XML générés.
 - ⚙️ **Moteur XML** : Le script métier (`tvaGrouper.js` puis `xmlGenerator.js`) qui s'assure de l'exactitude comptable et génère le fichier final pour la DGI.
 
 > ⚠️ **Important en production** : Ne jamais exposer la clé API côté client dans un déploiement public. Pour un déploiement sécurisé, implémentez un backend (par exemple un serveur Node.js/Express) qui agit en proxy vers l'API Gemini.
@@ -86,9 +89,10 @@ rs-declaration/
 │   ├── hooks/
 │   │   └── useInvoiceAnalyzer.js  # Hook principal : appel Gemini + état
 │   ├── pages/                   # Vues principales de l'application
-│   │   ├── Home.jsx
-│   │   ├── Dashboard.jsx
-│   │   └── HistoryPage.jsx
+│   │   ├── Home.jsx             # Page d'accueil (animée)
+│   │   ├── Dashboard.jsx        # Dashboard d'analyse
+│   │   ├── XmlEditorPage.jsx    # Extension: Éditeur XML post-génération
+│   │   └── HistoryPage.jsx      # Historique
 │   ├── utils/
 │   │   ├── geminiService.js     # Appel API Google Generative AI (Vision)
 │   │   ├── xmlGenerator.js      # Génération XML RS
