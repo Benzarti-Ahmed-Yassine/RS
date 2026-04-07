@@ -37,8 +37,8 @@ export default function Home() {
         </motion.div>
         
         <h1 className={styles.title}>
-          Déclaration Retenue à la Source <br />
-          <span>Automatisée par IA</span>
+          TAYSIR <br />
+          <span>Votre assistant fiscal intelligent</span>
         </h1>
         
         <p className={styles.subtitle}>
@@ -67,7 +67,7 @@ export default function Home() {
             <Zap size={24} />
           </div>
           <h3>Analyse Instantanée</h3>
-          <p>L'IA de Gemini extrait dates, montants, fournisseurs et numéros de factures en quelques secondes avec une très haute précision.</p>
+          <p>Notre IA intelligente extrait automatiquement les dates, montants, fournisseurs et numéros de factures avec une haute précision, sans nécessiter de configuration ni de clés d'API (credentials).</p>
         </motion.div>
         
         <motion.div 

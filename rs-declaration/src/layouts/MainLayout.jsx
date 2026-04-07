@@ -1,6 +1,7 @@
 import { NavLink, Outlet } from 'react-router-dom'
-import { FileText, LayoutDashboard, History, Home, FileCode2 } from 'lucide-react'
+import { LayoutDashboard, History, Home, FileCode2 } from 'lucide-react'
 import { motion } from 'framer-motion'
+import logoImage from '../assets/logo.png'
 import styles from './MainLayout.module.css'
 
 export default function MainLayout() {
@@ -18,11 +19,9 @@ export default function MainLayout() {
       >
         <div className={styles.headerContent}>
           <div className={styles.brand}>
-            <div className={styles.logo}>
-              <FileText size={22} />
-            </div>
+            <img src={logoImage} alt="TAYSIR Logo" className={styles.logoImg} />
             <div>
-              <h1 className={styles.title}>RS<span>Decl</span></h1>
+              <h1 className={styles.title}>TAY<span>SIR</span></h1>
             </div>
           </div>
 
@@ -31,7 +30,7 @@ export default function MainLayout() {
               <Home size={18} /> Accueil
             </NavLink>
             <NavLink to="/dashboard" className={({ isActive }) => `${styles.link} ${isActive ? styles.active : ''}`}>
-              <LayoutDashboard size={18} /> Tableau de Bord
+              <LayoutDashboard size={18} /> <strong>TABLEAU DE BORD</strong>
             </NavLink>
             <NavLink to="/history" className={({ isActive }) => `${styles.link} ${isActive ? styles.active : ''}`}>
               <History size={18} /> Historique
