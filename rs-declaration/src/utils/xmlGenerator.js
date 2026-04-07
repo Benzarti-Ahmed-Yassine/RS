@@ -25,6 +25,7 @@ function mil(n) {
 export function generateXML({ declarant, reference, beneficiaire, invoice, rsId, tvaGroups, cnpc = '0' }) {
   const annee = reference.annee || new Date().getFullYear()
   const mois  = String(reference.mois || new Date().getMonth() + 1).padStart(2, '0')
+  const jour  = String(reference.jour || new Date().getDate()).padStart(2, '0')
 
   // Build Operation blocks — one per TVA group
   let sumHT = 0, sumTVA = 0, sumTTC = 0, sumRS = 0
@@ -67,6 +68,7 @@ export function generateXML({ declarant, reference, beneficiaire, invoice, rsId,
     <ActeDepot>0</ActeDepot>
     <AnneeDepot>${annee}</AnneeDepot>
     <MoisDepot>${mois}</MoisDepot>
+    <JourDepot>${jour}</JourDepot>
   </ReferenceDeclaration>
   <AjouterCertificats>
     <Certificat>

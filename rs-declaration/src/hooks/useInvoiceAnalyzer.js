@@ -14,6 +14,7 @@ const defaultBeneficiaire = {
 const defaultReference = {
   annee: String(new Date().getFullYear()),
   mois: String(new Date().getMonth() + 1).padStart(2, '0'),
+  jour: String(new Date().getDate()).padStart(2, '0'),
 }
 
 export function useInvoiceAnalyzer() {
@@ -109,7 +110,11 @@ export function useInvoiceAnalyzer() {
       if (data.date) {
         const parts = data.date.split('/')
         if (parts.length === 3) {
-          setReference({ annee: parts[2], mois: parts[1].padStart(2, '0') })
+          setReference({ 
+            annee: parts[2], 
+            mois: parts[1].padStart(2, '0'),
+            jour: parts[0].padStart(2, '0')
+          })
         }
       }
       if (data.facture_num) setRefCertif(data.facture_num)

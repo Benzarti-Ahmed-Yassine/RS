@@ -1,5 +1,5 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+button, input, select, textarea { font-family: inherit; font-weight: inherit; font-size: inherit; }
 :root {
   --bg:        #f4f6f8; /* light gray bg */
   --bg2:       #ffffff;
@@ -47,6 +47,7 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--sans);
+  font-weight: 700;
   font-size: 14px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;

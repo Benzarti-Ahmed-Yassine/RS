@@ -53,14 +53,23 @@ export default function DeclarantForm({
           <input className={styles.input} value={declarant.identifiant}
             onChange={e => updD('identifiant', e.target.value)} placeholder="ex: 1323301MAM000" />
         </Field>
-        <div className={styles.row2}>
-          <Field label="ANNÉE DÉPÔT">
-            <input className={styles.input} value={reference.annee}
-              onChange={e => updR('annee', e.target.value)} placeholder="2025" maxLength={4} />
+        <div className={styles.row2} style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+          <Field label="JOUR DÉPÔT">
+            <input className={styles.input} value={reference.jour}
+              onChange={e => updR('jour', e.target.value.replace(/\D/g, ''))} 
+              onBlur={e => e.target.value && updR('jour', e.target.value.padStart(2, '0'))}
+              placeholder="01" maxLength={2} />
           </Field>
           <Field label="MOIS DÉPÔT">
             <input className={styles.input} value={reference.mois}
-              onChange={e => updR('mois', e.target.value)} placeholder="08" maxLength={2} />
+              onChange={e => updR('mois', e.target.value.replace(/\D/g, ''))} 
+              onBlur={e => e.target.value && updR('mois', e.target.value.padStart(2, '0'))}
+              placeholder="08" maxLength={2} />
+          </Field>
+          <Field label="ANNÉE DÉPÔT">
+            <input className={styles.input} value={reference.annee}
+              onChange={e => updR('annee', e.target.value.replace(/\D/g, ''))} 
+              placeholder="2025" maxLength={4} />
           </Field>
         </div>
       </section>
