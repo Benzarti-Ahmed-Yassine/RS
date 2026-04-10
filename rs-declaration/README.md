@@ -64,7 +64,7 @@ Ouvrez [http://localhost:5173](http://localhost:5173)
 L'application est structurée en une *Single Page Application* (SPA) optimisée par **React et Vite** :
 
 - 🏠 **Home** : Vue d'accueil avec animations interactives (Framer Motion).
-- 📊 **Dashboard** : Centre de traitement où l'IA vérifie et extrait les données (`geminiService.js`), puis affiche les résultats via `TvaGroupsTable`.
+- 📊 **Dashboard** : Centre de traitement où l'IA vérifie et extrait les données (`anthropicClient.js`), puis affiche les résultats via `TvaGroupsTable`.
 - 🕰️ **History** : Audit et sauvegardes des déclarations.
 - 📝 **Éditeur XML** : Vue dédiée pour charger, lire et corriger directement via un arbre dynamique UI les anciens fichiers XML générés.
 - ⚙️ **Moteur XML** : Le script métier (`tvaGrouper.js` puis `xmlGenerator.js`) qui s'assure de l'exactitude comptable et génère le fichier final pour la DGI.
@@ -80,7 +80,6 @@ rs-declaration/
 ├── src/
 │   ├── components/
 │   │   ├── Header.jsx           # En-tête de l'app
-│   │   ├── ApiKeyModal.jsx      # Modal saisie clé API
 │   │   ├── UploadZone.jsx       # Zone upload facture
 │   │   ├── DeclarantForm.jsx    # Formulaire déclarant + bénéficiaire
 │   │   ├── RsTypeSelector.jsx   # Sélecteur type RS
@@ -94,7 +93,7 @@ rs-declaration/
 │   │   ├── XmlEditorPage.jsx    # Extension: Éditeur XML post-génération
 │   │   └── HistoryPage.jsx      # Historique
 │   ├── utils/
-│   │   ├── geminiService.js     # Appel API Google Generative AI (Vision)
+│   │   ├── anthropicClient.js   # Appel API Google Generative AI (Vision)
 │   │   ├── xmlGenerator.js      # Génération XML RS
 │   │   └── tvaGrouper.js        # Groupement lignes par TVA
 │   ├── App.jsx                  # Configuration globale et React Router

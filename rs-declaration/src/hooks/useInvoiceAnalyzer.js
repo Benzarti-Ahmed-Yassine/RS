@@ -59,9 +59,32 @@ export function useInvoiceAnalyzer() {
   // XML output
   const [xmlOutput, setXmlOutput]           = useState('')
 
+  // ── Reset ────────────────────────────────────────────────────────
+  const resetApp = useCallback(() => {
+    setFile(null)
+    setPreview(null)
+    setBase64('')
+    setMimeType('')
+    setStatus(null)
+    setInvoiceData(null)
+    setDeclarant(defaultDeclarant)
+    setBeneficiaire(defaultBeneficiaire)
+    setReference(defaultReference)
+    setRefCertif('')
+    setCnpc('0')
+    setRsCategorie('')
+    setRsId('')
+    setTvaGroups([])
+    setGlobalTauxRS(1.5)
+    setXmlOutput('')
+  }, [])
+
   // ── File handling ────────────────────────────────────────────────
   const handleFile = useCallback((f) => {
-    if (!f) return
+    if (!f) {
+      resetApp()
+      return
+    }
     setFile(f)
     setInvoiceData(null)
     setTvaGroups([])
@@ -77,7 +100,7 @@ export function useInvoiceAnalyzer() {
       else setPreview(null)
     }
     reader.readAsDataURL(f)
-  }, [])
+  }, [resetApp])
 
   // ── Analyze ──────────────────────────────────────────────────────
   const analyze = useCallback(async () => {
@@ -192,25 +215,6 @@ export function useInvoiceAnalyzer() {
     URL.revokeObjectURL(a.href)
   }, [xmlOutput, refCertif])
 
-  // ── Reset ────────────────────────────────────────────────────────
-  const resetApp = useCallback(() => {
-    setFile(null)
-    setPreview(null)
-    setBase64('')
-    setMimeType('')
-    setStatus(null)
-    setInvoiceData(null)
-    setDeclarant(defaultDeclarant)
-    setBeneficiaire(defaultBeneficiaire)
-    setReference(defaultReference)
-    setRefCertif('')
-    setCnpc('0')
-    setRsCategorie('')
-    setRsId('')
-    setTvaGroups([])
-    setGlobalTauxRS(1.5)
-    setXmlOutput('')
-  }, [])
 
   const clearHistory = useCallback(() => {
     setHistory([])

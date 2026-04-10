@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env
+.env.local
+.DS_Store
+*.log
+rs-declaration/node_modules/
+rs-declaration/dist/
+rs-declaration/.env
+rs-declaration/.env.local
