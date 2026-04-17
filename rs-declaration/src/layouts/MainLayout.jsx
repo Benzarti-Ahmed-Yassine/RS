@@ -1,7 +1,7 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { LayoutDashboard, History, Home, FileCode2 } from 'lucide-react'
 import { motion } from 'framer-motion'
-import logoImage from '../assets/logo.png'
+const logoImage = '/t.png'
 import styles from './MainLayout.module.css'
 
 export default function MainLayout() {
@@ -11,7 +11,7 @@ export default function MainLayout() {
       <div className={styles.gridBg} aria-hidden />
 
       {/* Top Navigation */}
-      <motion.header 
+      <motion.header
         className={styles.header}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
